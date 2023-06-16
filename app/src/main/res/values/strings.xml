@@ -1,5 +1,10 @@
 <resources>
-    <string name="app_name">UzbekChat</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name" translatable="false">Ziyogram</string>
+    <string name="clientId" translatable="false">949050265517-en16rp8fsvgnujf8164tmks32iag821t.apps.googleusercontent.com</string>
+    <string name="sign_in">Sign In</string>
+    <string name="search">Search...</string>
+    <string name="writing_text">Writing text...</string>
+    <string name="settings">Settings</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
 </resources>

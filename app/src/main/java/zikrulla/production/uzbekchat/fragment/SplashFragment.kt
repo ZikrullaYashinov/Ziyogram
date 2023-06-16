@@ -24,7 +24,7 @@ class SplashFragment : Fragment() {
         Handler(Looper.getMainLooper()).postDelayed({
             Navigation.findNavController(binding.root)
                 .navigate(R.id.action_splashFragment_to_homeFragment)
-        }, 1000)
+        }, 2000)
 
         return binding.root
     }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sign_in">Kirish</string>
+    <string name="search">Qidirish…</string>
+    <string name="writing_text">Matn kiriting</string>
+    <string name="settings">Sozlamalar</string>
+    <string name="cancel">Bekor qilish</string>
+    <string name="save">Saqlash</string>
+</resources>

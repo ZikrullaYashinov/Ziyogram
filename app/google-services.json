@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "949050265517",
+    "firebase_url": "https://foxgram-messanger-default-rtdb.firebaseio.com",
+    "project_id": "foxgram-messanger",
+    "storage_bucket": "foxgram-messanger.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:949050265517:android:317c969cbd3724167e1b24",
+        "android_client_info": {
+          "package_name": "zikrulla.production.uzbekchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "949050265517-7lc2ev6ahge93i0k84hejpetejhu7nhr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "zikrulla.production.uzbekchat",
+            "certificate_hash": "1c1b99e6269a8253594e8c485c5605bf1c470c9a"
+          }
+        },
+        {
+          "client_id": "949050265517-2os7lmopc8s29iggnvi5tvh61dcs0ogp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRlKqZNWDSAiJrxQrFl0qRC0Fj1DQzjiw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "949050265517-2os7lmopc8s29iggnvi5tvh61dcs0ogp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
