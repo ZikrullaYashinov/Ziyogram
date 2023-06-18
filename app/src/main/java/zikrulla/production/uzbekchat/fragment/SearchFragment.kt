@@ -15,8 +15,10 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import zikrulla.production.uzbekchat.R
+import zikrulla.production.uzbekchat.adapter.UserListAdapter
 import zikrulla.production.uzbekchat.adapter.UsersAdapter
 import zikrulla.production.uzbekchat.databinding.FragmentSearchBinding
+import zikrulla.production.uzbekchat.model.Message
 import zikrulla.production.uzbekchat.model.User
 import zikrulla.production.uzbekchat.util.Util
 import zikrulla.production.uzbekchat.viewmodel.UsersViewModel
@@ -36,7 +38,7 @@ class SearchFragment : Fragment() {
     private lateinit var viewModel: UsersViewModel
     private lateinit var usersList: ArrayList<User>
     private lateinit var user: User
-    private lateinit var adapter: UsersAdapter
+    private val adapter by lazy { UserListAdapter() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,10 +58,10 @@ class SearchFragment : Fragment() {
         database = FirebaseDatabase.getInstance()
         reference = database.reference
         usersList = ArrayList()
-        adapter = UsersAdapter(requireContext(), usersList) {
+        adapter.itemClick = {
             val bundle = Bundle()
             bundle.putSerializable(Util.ARG_USER, it)
-            bundle.putSerializable(Util.ARG_USER, user)
+            bundle.putSerializable(Util.ARG_USER_I, user)
             Navigation.findNavController(binding.root)
                 .navigate(R.id.action_searchFragment_to_messageFragment, bundle)
         }
@@ -70,7 +72,7 @@ class SearchFragment : Fragment() {
 
     private fun click() {
         binding.search.addTextChangedListener {
-            search(it.toString())
+            search(usersList, it.toString())
         }
 
         binding.back.setOnClickListener {
@@ -81,8 +83,11 @@ class SearchFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun change() {
         viewModel.getUsers().observe(viewLifecycleOwner) {
-            usersList = it
-            adapter.notifyDataSetChanged()
+            val s = binding.search.text.toString().trim()
+            if (s.isNotEmpty())
+                search(it, s)
+            else
+                adapter.submitList(it)
         }
     }
 
@@ -96,7 +101,7 @@ class SearchFragment : Fragment() {
                         if (u.uid != user.uid)
                             usersList.add(u)
                     }
-                    adapter.search(usersList)
+                    viewModel.fetchUsers(usersList)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -106,16 +111,16 @@ class SearchFragment : Fragment() {
             })
     }
 
-    private fun search(query: String?) {
+    private fun search(l: ArrayList<User>, query: String?) {
         if (query!!.trim().isEmpty()) {
-            adapter.search(usersList)
+            adapter.submitList(l)
         } else {
             val searchUser = ArrayList<User>()
-            for (i in usersList) {
+            for (i in l) {
                 if (i.displayName?.lowercase()!!.contains(query.trim().lowercase()))
                     searchUser.add(i)
             }
-            adapter.search(searchUser)
+            adapter.submitList(searchUser)
         }
     }
 }

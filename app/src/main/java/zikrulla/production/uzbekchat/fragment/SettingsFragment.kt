@@ -23,6 +23,7 @@ class SettingsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
             user = requireArguments().getSerializable(Util.ARG_USER) as User
+            isEditUser = requireArguments().getBoolean(Util.ARG_USER_EDIT, false)
         }
     }
 
@@ -32,6 +33,7 @@ class SettingsFragment : Fragment() {
     private lateinit var sharedPreference: SharedPreferences
     private lateinit var sharedPreferenceEditor: SharedPreferences.Editor
     private lateinit var user: User
+    private var isEditUser: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,21 +45,6 @@ class SettingsFragment : Fragment() {
         click()
 
         return binding.root
-    }
-
-    private fun click() {
-        binding.logout.setOnClickListener {
-            logOut()
-        }
-        binding.back.setOnClickListener {
-            Navigation.findNavController(binding.root).popBackStack()
-        }
-        binding.setName.setOnClickListener {
-            setName()
-        }
-        binding.setPhoto.setOnClickListener {
-            setPhoto()
-        }
     }
 
     private fun load() {
@@ -77,6 +64,23 @@ class SettingsFragment : Fragment() {
                 .centerCrop()
                 .into(photo)
         }
+
+        if (!isEditUser) hide()
+    }
+
+    private fun click() {
+        binding.logout.setOnClickListener {
+            logOut()
+        }
+        binding.back.setOnClickListener {
+            Navigation.findNavController(binding.root).popBackStack()
+        }
+        binding.setName.setOnClickListener {
+            setName()
+        }
+        binding.setPhoto.setOnClickListener {
+            setPhoto()
+        }
     }
 
     private fun setName() {
@@ -85,6 +89,15 @@ class SettingsFragment : Fragment() {
 
     private fun setPhoto() {
 
+    }
+
+    private fun hide() {
+        binding.apply {
+            setName.visibility = View.GONE
+            setPhoto.visibility = View.GONE
+            logout.visibility = View.GONE
+            profile.text = getString(R.string.profile)
+        }
     }
 
     private fun logOut() {

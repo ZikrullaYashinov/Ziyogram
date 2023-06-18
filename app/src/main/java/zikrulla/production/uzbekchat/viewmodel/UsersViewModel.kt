@@ -13,7 +13,7 @@ class UsersViewModel : ViewModel() {
         return users
     }
 
-    fun setUsers(userList: ArrayList<User>) {
+    fun fetchUsers(userList: ArrayList<User>) {
         users.postValue(userList)
     }
 }

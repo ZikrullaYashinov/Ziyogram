@@ -12,6 +12,7 @@ object Util {
 
     const val ARG_USER = "arg_user"
     const val ARG_USER_I = "arg_user_i"
+    const val ARG_USER_EDIT = "arg_user_edit"
 
 //    fun sortMessage(l: ArrayList<Message>): ArrayList<Message> {
 //        val size = l.size

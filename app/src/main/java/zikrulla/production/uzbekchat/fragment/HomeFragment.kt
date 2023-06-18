@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
@@ -16,8 +17,8 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import zikrulla.production.uzbekchat.R
+import zikrulla.production.uzbekchat.adapter.UserListAdapter
 import zikrulla.production.uzbekchat.databinding.FragmentHomeBinding
-import zikrulla.production.uzbekchat.adapter.UsersAdapter
 import zikrulla.production.uzbekchat.model.User
 import zikrulla.production.uzbekchat.util.Util
 import zikrulla.production.uzbekchat.viewmodel.UsersViewModel
@@ -30,8 +31,8 @@ class HomeFragment : Fragment() {
     private lateinit var database: FirebaseDatabase
     private lateinit var reference: DatabaseReference
     private lateinit var viewModel: UsersViewModel
-    private lateinit var adapter: UsersAdapter
-    private lateinit var userList: List<User>
+    private val adapter by lazy { UserListAdapter() }
+    private lateinit var userList: ArrayList<User>
     private var user: User? = null
 
     override fun onCreateView(
@@ -54,7 +55,9 @@ class HomeFragment : Fragment() {
         reference = database.reference
         userList = ArrayList()
         viewModel = ViewModelProvider(this)[UsersViewModel::class.java]
-        adapter = UsersAdapter(requireContext(), userList)
+        adapter.itemClick = {
+
+        }
         binding.recyclerView.adapter = adapter
     }
 
@@ -73,6 +76,7 @@ class HomeFragment : Fragment() {
         binding.apply {
             setting.setOnClickListener {
                 val bundle = Bundle()
+                bundle.putBoolean(Util.ARG_USER_EDIT, true)
                 bundle.putSerializable(Util.ARG_USER, user)
                 Navigation.findNavController(binding.root)
                     .navigate(R.id.action_homeFragment_to_settingsFragment, bundle)
@@ -89,8 +93,7 @@ class HomeFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun changeUsers() {
         viewModel.getUsers().observe(viewLifecycleOwner) {
-            userList = it
-            adapter.notifyDataSetChanged()
+            adapter.submitList(it)
         }
     }
 
@@ -103,14 +106,14 @@ class HomeFragment : Fragment() {
         reference.child("users").child(user?.uid!!).child("messages")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    val listUser = ArrayList<User>()
+                    userList.clear()
                     for (user in snapshot.children) {
                         val value = user.getValue(User::class.java)
                         if (value != null) {
-                            listUser.add(value)
+                            userList.add(value)
                         }
                     }
-                    viewModel.setUsers(listUser)
+                    viewModel.fetchUsers(userList)
                 }
 
                 override fun onCancelled(error: DatabaseError) {

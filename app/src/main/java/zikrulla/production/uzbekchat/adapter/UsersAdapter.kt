@@ -2,6 +2,7 @@ package zikrulla.production.uzbekchat.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -13,10 +14,12 @@ import zikrulla.production.uzbekchat.model.User
 class UsersAdapter(
     private val context: Context,
     private var list: List<User>,
-    private val itemClick: (user: User) -> Unit
+    private val listener: ItemClickListener
 ) :
     RecyclerView.Adapter<UsersAdapter.Vh>() {
-    inner class Vh(val itemUserBinding: ItemUserBinding) : ViewHolder(itemUserBinding.root) {
+
+    inner class Vh(private val itemUserBinding: ItemUserBinding) :
+        ViewHolder(itemUserBinding.root) {
         fun bind(user: User) {
             itemUserBinding.apply {
                 name.text = user.displayName
@@ -25,7 +28,12 @@ class UsersAdapter(
                     .load(user.photoUrl)
                     .centerCrop()
                     .into(image)
+                root.setOnClickListener {
+                    Log.d("123", "bind: click")
+                    listener.onClick(user)
+                }
             }
+
         }
     }
 
@@ -40,9 +48,6 @@ class UsersAdapter(
     override fun onBindViewHolder(holder: Vh, position: Int) {
         val user = list[position]
         holder.bind(user)
-        holder.itemView.setOnClickListener {
-            itemClick.invoke(user)
-        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -51,4 +56,7 @@ class UsersAdapter(
         notifyDataSetChanged()
     }
 
+    interface ItemClickListener {
+        fun onClick(user: User)
+    }
 }

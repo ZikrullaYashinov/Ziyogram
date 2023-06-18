@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
+import androidx.navigation.Navigation.findNavController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -27,6 +28,7 @@ import zikrulla.production.uzbekchat.databinding.FragmentLoginBinding
 import zikrulla.production.uzbekchat.model.User
 import zikrulla.production.uzbekchat.util.Util
 import java.util.Date
+
 
 class LoginFragment : Fragment() {
 
@@ -45,13 +47,19 @@ class LoginFragment : Fragment() {
     ): View {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
 
+        load()
+
+        return binding.root
+    }
+
+    private fun load() {
         gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.clientId))
             .requestEmail()
             .build()
         googleSignIn = GoogleSignIn.getClient(requireContext(), gso)
         database = FirebaseDatabase.getInstance()
-        reference = database.reference
+        reference = database.getReference("users")
         sharedPreference = activity?.getSharedPreferences(Util.SHP_LOGIN, Context.MODE_PRIVATE)!!
         sharedPreferenceEditor = sharedPreference.edit()
 
@@ -59,8 +67,6 @@ class LoginFragment : Fragment() {
             val intent = googleSignIn.signInIntent
             startActivityForResult(intent, 1)
         }
-
-        return binding.root
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -82,20 +88,22 @@ class LoginFragment : Fragment() {
                 Date().time
             )
 
-            reference.addListenerForSingleValueEvent(object : ValueEventListener {
+            reference.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val children = snapshot.children
                     var isHas = false
-                    children.forEach {
+                    for (it in children) {
                         val value = it.getValue(User::class.java)
-                        if (value?.uid == user.uid)
+                        if (value?.uid == user.uid) {
                             isHas = true
+                            break
+                        }
                     }
                     if (isHas) {
                         writeShP(user, true)
                         val bundle = Bundle()
                         bundle.putString("id", user.uid)
-                        Navigation.findNavController(binding.root)
+                        findNavController(binding.root)
                             .navigate(R.id.action_loginFragment_to_homeFragment, bundle)
                     } else {
                         setNewUser(user)
@@ -111,11 +119,11 @@ class LoginFragment : Fragment() {
     }
 
     private fun setNewUser(user: User) {
-        reference.child("users").child(user.uid ?: "").setValue(user).addOnSuccessListener {
+        reference.child(user.uid ?: "").setValue(user).addOnSuccessListener {
             writeShP(user, true)
             val bundle = Bundle()
             bundle.putString("id", user.uid)
-            Navigation.findNavController(binding.root)
+            findNavController(binding.root)
                 .navigate(R.id.action_loginFragment_to_homeFragment, bundle)
         }
     }
