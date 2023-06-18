@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.navigation.Navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -103,8 +104,9 @@ class LoginFragment : Fragment() {
                         writeShP(user, true)
                         val bundle = Bundle()
                         bundle.putString("id", user.uid)
-                        findNavController(binding.root)
-                            .navigate(R.id.action_loginFragment_to_homeFragment, bundle)
+                        val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+                        val navController = navHostFragment.navController
+                        navController.navigate(R.id.action_loginFragment_to_homeFragment, bundle)
                     } else {
                         setNewUser(user)
                     }
@@ -123,8 +125,9 @@ class LoginFragment : Fragment() {
             writeShP(user, true)
             val bundle = Bundle()
             bundle.putString("id", user.uid)
-            findNavController(binding.root)
-                .navigate(R.id.action_loginFragment_to_homeFragment, bundle)
+            val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+            val navController = navHostFragment.navController
+            navController.navigate(R.id.action_loginFragment_to_homeFragment, bundle)
         }
     }
 
