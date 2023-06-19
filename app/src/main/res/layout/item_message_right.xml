@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+    android:maxWidth="@dimen/_230sdp">
 
     <LinearLayout
         android:id="@+id/message"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_5sdp"
-        android:layout_weight="3"
+        android:layout_marginEnd="@dimen/_5sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
         android:background="@drawable/bg_message_right"
         android:orientation="vertical"
         android:padding="@dimen/_5sdp">
@@ -42,4 +38,4 @@
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

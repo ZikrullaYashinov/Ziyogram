@@ -11,8 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
-import androidx.navigation.Navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -89,7 +87,7 @@ class LoginFragment : Fragment() {
                 Date().time
             )
 
-            reference.addValueEventListener(object : ValueEventListener {
+            reference.addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     val children = snapshot.children
                     var isHas = false
@@ -102,13 +100,12 @@ class LoginFragment : Fragment() {
                     }
                     if (isHas) {
                         writeShP(user, true)
-                        val bundle = Bundle()
-                        bundle.putString("id", user.uid)
-                        val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
-                        val navController = navHostFragment.navController
-                        navController.navigate(R.id.action_loginFragment_to_homeFragment, bundle)
+                        loginToHome(user)
                     } else {
-                        setNewUser(user)
+                        reference.child(user.uid ?: "").setValue(user).addOnSuccessListener {
+                            writeShP(user, true)
+                            loginToHome(user)
+                        }
                     }
                 }
 
@@ -120,15 +117,11 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun setNewUser(user: User) {
-        reference.child(user.uid ?: "").setValue(user).addOnSuccessListener {
-            writeShP(user, true)
-            val bundle = Bundle()
-            bundle.putString("id", user.uid)
-            val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
-            val navController = navHostFragment.navController
-            navController.navigate(R.id.action_loginFragment_to_homeFragment, bundle)
-        }
+    private fun loginToHome(user: User) {
+        val bundle = Bundle()
+        bundle.putString("id", user.uid)
+        Navigation.findNavController(requireActivity(), R.id.loginFragment)
+            .navigate(R.id.action_loginFragment_to_homeFragment, bundle)
     }
 
     fun writeShP(user: User, isLogin: Boolean) {

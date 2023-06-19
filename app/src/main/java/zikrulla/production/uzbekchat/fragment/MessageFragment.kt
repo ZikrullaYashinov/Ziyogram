@@ -1,15 +1,20 @@
 package zikrulla.production.uzbekchat.fragment
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -43,6 +48,8 @@ class MessageFragment : Fragment() {
     private lateinit var userI: User
     private lateinit var database: FirebaseDatabase
     private lateinit var reference: DatabaseReference
+    private lateinit var manager: LinearLayoutManager
+    private var p = 0
     private val TAG = "@@@@"
 
     override fun onCreateView(
@@ -57,7 +64,13 @@ class MessageFragment : Fragment() {
         return binding.root
     }
 
+    override fun onStart() {
+        super.onStart()
+        val inputMethodManager =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val v = activity?.currentFocus
 
+    }
 
     private fun load() {
         viewModel = ViewModelProvider(this)[MessagesViewModel::class.java]
@@ -71,6 +84,7 @@ class MessageFragment : Fragment() {
             }
         }
 
+        manager = LinearLayoutManager(requireContext())
         binding.apply {
             recyclerView.adapter = adapter
             name.text = user.displayName
@@ -107,11 +121,11 @@ class MessageFragment : Fragment() {
             .navigate(R.id.action_messageFragment_to_settingsFragment, bundle)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun change() {
         viewModel.getMessages().observe(viewLifecycleOwner) {
             Log.d(TAG, "change: $it")
             adapter.submitList(it)
+            binding.recyclerView.scrollToPosition(it.size - 1)
         }
     }
 
@@ -135,7 +149,9 @@ class MessageFragment : Fragment() {
 
     private fun sendMessage(message: Message) {
         reference.child("users").child(userI.uid ?: "").child("messages").child(user.uid ?: "")
-            .child(message.messageId ?: "").setValue(message)
+            .child(message.messageId ?: "").setValue(message).addOnSuccessListener {
+
+            }
         reference.child("users").child(user.uid ?: "").child("messages").child(userI.uid ?: "")
             .child(message.messageId ?: "").setValue(message)
     }
