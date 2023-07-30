@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/line3"
+    app:cardCornerRadius="@dimen/_10sdp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_5sdp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="@dimen/_26sdp"
+                android:layout_height="@dimen/_26sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:src="@drawable/ic_edit"
+                app:tint="@color/line2" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:fontFamily="@font/inter_medium"
+                android:text="@string/edit"
+                android:textColor="@color/line"
+                android:textSize="@dimen/_20sdp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/delete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="@dimen/_26sdp"
+                android:layout_height="@dimen/_26sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:src="@drawable/ic_delete"
+                app:tint="@color/line2" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:fontFamily="@font/inter_medium"
+                android:text="@string/delete"
+                android:textColor="@color/line"
+                android:textSize="@dimen/_20sdp" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/copy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="@dimen/_26sdp"
+                android:layout_height="@dimen/_26sdp"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:src="@drawable/ic_copy"
+                app:tint="@color/line2" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:fontFamily="@font/inter_medium"
+                android:text="@string/copy"
+                android:textColor="@color/line"
+                android:textSize="@dimen/_20sdp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

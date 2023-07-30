@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="zikrulla.production.uzbekchat.fragment.HomeFragment"
+        android:name="zikrulla.production.uzbekchat.ui.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -27,7 +27,7 @@
     </fragment>
     <fragment
         android:id="@+id/splashFragment"
-        android:name="zikrulla.production.uzbekchat.fragment.SplashFragment"
+        android:name="zikrulla.production.uzbekchat.ui.SplashFragment"
         android:label="fragment_splash"
         tools:layout="@layout/fragment_splash" >
         <action
@@ -38,7 +38,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="zikrulla.production.uzbekchat.fragment.LoginFragment"
+        android:name="zikrulla.production.uzbekchat.ui.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -49,12 +49,16 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="zikrulla.production.uzbekchat.fragment.SettingsFragment"
+        android:name="zikrulla.production.uzbekchat.ui.SettingsFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_productionFragment"
+            app:destination="@id/productionFragment" />
+    </fragment>
     <fragment
         android:id="@+id/messageFragment"
-        android:name="zikrulla.production.uzbekchat.fragment.MessageFragment"
+        android:name="zikrulla.production.uzbekchat.ui.MessageFragment"
         android:label="fragment_message"
         tools:layout="@layout/fragment_message" >
         <action
@@ -63,11 +67,16 @@
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
-        android:name="zikrulla.production.uzbekchat.fragment.SearchFragment"
+        android:name="zikrulla.production.uzbekchat.ui.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" >
         <action
             android:id="@+id/action_searchFragment_to_messageFragment"
             app:destination="@id/messageFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/productionFragment"
+        android:name="zikrulla.production.uzbekchat.ui.ProductionFragment"
+        android:label="fragment_production"
+        tools:layout="@layout/fragment_production" />
 </navigation>

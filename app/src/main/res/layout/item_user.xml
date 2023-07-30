@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -22,8 +23,9 @@
             android:src="@drawable/ic_default_man" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
@@ -32,6 +34,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:fontFamily="@font/inter_medium"
+                android:maxLines="1"
                 android:text="Zikrulla Yashinov"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_16sdp" />
@@ -43,6 +46,7 @@
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_2sdp"
                 android:fontFamily="@font/inter_medium"
+                android:maxLines="1"
                 android:text="zikrullayashinov173@gmail.com"
                 android:textColor="@color/line2"
                 android:textSize="@dimen/_14sdp" />
@@ -52,6 +56,16 @@
                 android:layout_height="@dimen/_1sdp"
                 android:background="@color/line2" />
         </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/new_message"
+            android:layout_width="@dimen/_15sdp"
+            android:layout_height="@dimen/_15sdp"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/pro"
+            app:cardCornerRadius="@dimen/_20sdp" />
     </LinearLayout>
 
 </LinearLayout>

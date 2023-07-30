@@ -1,12 +1,15 @@
 package zikrulla.production.uzbekchat.model
 
-class Message {
+import java.io.Serializable
+
+class Message : Serializable {
     var messageId: String? = null
     var fromUser: String? = null
     var toUser: String? = null
     var text: String? = null
     var time: Long? = null
-    var isRead: Boolean? = null
+    var isRead: Int? = null
+    var isEdit: Boolean = false
 
     constructor()
 
@@ -16,7 +19,8 @@ class Message {
         toUser: String?,
         text: String?,
         time: Long?,
-        isRead: Boolean?
+        isRead: Int?,
+        isEdit: Boolean = false
     ) {
         this.messageId = messageId
         this.fromUser = fromUser
@@ -24,10 +28,10 @@ class Message {
         this.text = text
         this.time = time
         this.isRead = isRead
+        this.isEdit = isEdit
     }
 
     override fun toString(): String {
-        return "Message(messageId=$messageId, fromUser=$fromUser, toUser=$toUser, text=$text, time=$time, isRead=$isRead)"
+        return "Message(messageId=$messageId, fromUser=$fromUser, toUser=$toUser, text=$text, time=$time, isRead=$isRead, isEdit=$isEdit)"
     }
-
 }

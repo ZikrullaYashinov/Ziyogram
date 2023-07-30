@@ -1,4 +1,4 @@
-package zikrulla.production.uzbekchat.fragment
+package zikrulla.production.uzbekchat.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -16,9 +16,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import zikrulla.production.uzbekchat.R
 import zikrulla.production.uzbekchat.adapter.UserListAdapter
-import zikrulla.production.uzbekchat.adapter.UsersAdapter
 import zikrulla.production.uzbekchat.databinding.FragmentSearchBinding
-import zikrulla.production.uzbekchat.model.Message
 import zikrulla.production.uzbekchat.model.User
 import zikrulla.production.uzbekchat.util.Util
 import zikrulla.production.uzbekchat.viewmodel.UsersViewModel

@@ -2,7 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.send" />
+
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -11,6 +17,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UzbekChat"
         tools:targetApi="31">
+
+        <service
+            android:name=".util.FirebaseService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.permission.RECEIVE"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name=".util.InternetReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:ignore="ExportedReceiver" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -20,6 +42,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data android:name="com.onesignal.NotificationServiceExtension"
+            android:value="zikrulla.production.uzbekchat.util.NotificationService"/>
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

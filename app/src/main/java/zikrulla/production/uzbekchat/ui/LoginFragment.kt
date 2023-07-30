@@ -1,4 +1,4 @@
-package zikrulla.production.uzbekchat.fragment
+package zikrulla.production.uzbekchat.ui
 
 import android.content.Context
 import android.content.Intent
@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -25,7 +26,9 @@ import com.google.firebase.database.ValueEventListener
 import zikrulla.production.uzbekchat.R
 import zikrulla.production.uzbekchat.databinding.FragmentLoginBinding
 import zikrulla.production.uzbekchat.model.User
+import zikrulla.production.uzbekchat.util.FirebaseService
 import zikrulla.production.uzbekchat.util.Util
+import zikrulla.production.uzbekchat.viewmodel.LoginViewModel
 import java.util.Date
 
 
@@ -38,6 +41,7 @@ class LoginFragment : Fragment() {
     private lateinit var reference: DatabaseReference
     private lateinit var sharedPreference: SharedPreferences
     private lateinit var sharedPreferenceEditor: Editor
+    private val viewModel: LoginViewModel by viewModels()
     private val TAG = "@@@@"
 
     override fun onCreateView(
@@ -58,11 +62,19 @@ class LoginFragment : Fragment() {
             .build()
         googleSignIn = GoogleSignIn.getClient(requireContext(), gso)
         database = FirebaseDatabase.getInstance()
-        reference = database.getReference("users")
+        reference = database.getReference(Util.F_USERS)
         sharedPreference = activity?.getSharedPreferences(Util.SHP_LOGIN, Context.MODE_PRIVATE)!!
         sharedPreferenceEditor = sharedPreference.edit()
 
+        viewModel.getIsRun().observe(viewLifecycleOwner) {
+            binding.signInGoogle.apply {
+                isEnabled = true
+            }
+        }
+
         binding.signInGoogle.setOnClickListener {
+            binding.signInGoogle.isEnabled = false
+            viewModel.fetchIsOpposite()
             val intent = googleSignIn.signInIntent
             startActivityForResult(intent, 1)
         }
@@ -79,7 +91,8 @@ class LoginFragment : Fragment() {
     private fun handleSignInResult(task: Task<GoogleSignInAccount>?) {
         try {
             val account: GoogleSignInAccount? = task?.getResult(ApiException::class.java)
-            val user = User(
+
+            var user = User(
                 account?.displayName,
                 account?.id,
                 account?.email,
@@ -95,15 +108,21 @@ class LoginFragment : Fragment() {
                         val value = it.getValue(User::class.java)
                         if (value?.uid == user.uid) {
                             isHas = true
+                            user = value!!
                             break
                         }
                     }
+
                     if (isHas) {
+                        // login
                         writeShP(user, true)
+                        viewModel.addToken(user, user.deviceTokens as ArrayList<String>?)
                         loginToHome(user)
                     } else {
+                        // register
                         reference.child(user.uid ?: "").setValue(user).addOnSuccessListener {
                             writeShP(user, true)
+                            viewModel.addToken(user, null)
                             loginToHome(user)
                         }
                     }

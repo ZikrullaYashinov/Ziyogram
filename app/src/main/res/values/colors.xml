@@ -3,9 +3,11 @@
     <color name="black">#101010</color>
     <color name="white">#FFFFFFFF</color>
     <color name="pro3">#DEFFCE</color>
-    <color name="pro">#65DB2D</color>
+    <color name="pro">#73C94B</color>
     <color name="pro2">#41CB00</color>
     <color name="line">#E6E6E6</color>
     <color name="line2">#909090</color>
     <color name="line3">#2E2E2E</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="red">#FF0000</color>
 </resources>

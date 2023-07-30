@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".fragment.SettingsFragment">
+    tools:context=".ui.SettingsFragment">
 
     <RelativeLayout
         android:id="@+id/layout"
@@ -20,6 +21,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/_5sdp"
+            android:foreground="?attr/selectableItemBackground"
             android:src="@drawable/ic_back_white" />
 
         <TextView
@@ -43,7 +45,9 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/_5sdp"
             android:layout_marginEnd="@dimen/_5sdp"
-            android:src="@drawable/ic_logout" />
+            android:foreground="?attr/selectableItemBackground"
+            app:tint="@color/white"
+            android:src="@drawable/ic_more_vert" />
 
     </RelativeLayout>
 
@@ -56,8 +60,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            android:scaleType="fitCenter"
             android:background="@color/line3"
+            android:scaleType="fitCenter"
             android:src="@drawable/ic_default_man" />
 
         <ImageView
@@ -70,6 +74,7 @@
             android:layout_marginEnd="@dimen/_12sdp"
             android:layout_marginBottom="@dimen/_12sdp"
             android:background="@drawable/bg_back_btn"
+            android:foreground="?attr/selectableItemBackground"
             android:padding="@dimen/_4sdp"
             android:src="@drawable/ic_add" />
     </RelativeLayout>
@@ -93,7 +98,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:fontFamily="@font/inter_medium"
-                android:text="Zikrulla Yashinov"
+                android:text="@string/app_name"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_22sdp" />
 
@@ -103,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:fontFamily="@font/inter_medium"
-                android:text="zikrullayashinov173@gmail.com"
+                android:text="@string/app_name"
                 android:textColor="@color/line2"
                 android:textSize="@dimen/_14sdp" />
         </LinearLayout>
@@ -119,6 +124,7 @@
             android:layout_marginTop="@dimen/_2sdp"
             android:layout_marginEnd="@dimen/_2sdp"
             android:background="@drawable/bg_back_btn"
+            android:foreground="?attr/selectableItemBackground"
             android:padding="@dimen/_4sdp"
             android:src="@drawable/ic_edit" />
 

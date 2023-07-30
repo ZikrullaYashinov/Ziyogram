@@ -6,7 +6,7 @@
             <corners android:radius="@dimen/_5sdp" />
         </shape>
     </item>
-    <item android:state_pressed="true">
+    <item android:state_selected="true">
         <shape tools:ignore="StateListReachable">
             <solid android:color="@color/pro3" />
             <corners android:radius="@dimen/_5sdp" />

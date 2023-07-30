@@ -2,9 +2,19 @@
 <resources>
     <string name="sign_in">Kirish</string>
     <string name="search">Qidirish…</string>
-    <string name="writing_text">Matn kiriting</string>
+    <string name="writing_text">Matn kiriting…</string>
     <string name="settings">Sozlamalar</string>
     <string name="cancel">Bekor qilish</string>
     <string name="save">Saqlash</string>
-    <string name="profile">Profile</string>
+    <string name="profile">Profil</string>
+    <string name="name_is_empty">Ism maydoni bo\'sh</string>
+    <string name="edit">Taxrirlash</string>
+    <string name="name">Nomi</string>
+    <string name="delete">O\'chirish</string>
+    <string name="copy">Nusxa olish</string>
+    <string name="copied">Nusxalandi</string>
+    <string name="app_info">Ilova haqida</string>
+    <string name="app_version">Ilova versiyasi</string>
+    <string name="contact_us">Biz bilan bog\'lanish</string>
+    <string name="exit">Chiqish</string>
 </resources>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.SplashFragment">
+    tools:context=".ui.SplashFragment">
 
     <View
         android:id="@+id/view1"
@@ -50,7 +50,7 @@
             android:layout_width="@dimen/_40sdp"
             android:layout_height="@dimen/_40sdp"
             android:layout_marginEnd="@dimen/_8sdp"
-            android:src="@drawable/ic_ziyagram" />
+            android:src="@drawable/ic_ziyogram" />
 
         <TextView
             android:id="@+id/project_name"

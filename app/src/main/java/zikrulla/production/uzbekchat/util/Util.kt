@@ -2,6 +2,8 @@ package zikrulla.production.uzbekchat.util
 
 object Util {
 
+    const val APP_VERSION = "1.1"
+
     const val SHP_LOGIN = "sigin"
     const val SHP_IS_SIGIN = "is_sigin"
     const val SHP_UID = "user_id"
@@ -13,6 +15,17 @@ object Util {
     const val ARG_USER = "arg_user"
     const val ARG_USER_I = "arg_user_i"
     const val ARG_USER_EDIT = "arg_user_edit"
+
+    const val BASE_URL = "https://fcm.googleapis.com/"
+    const val SERVER_KEY = "AAAA3PfNz60:APA91bEPJlpJWQffgy4IWux6KDQ5PRUy7l_hLNuwXeQvpaJFfxrotYQOaEZM-wixoF-YX4qPKnGliKblUbuYsEyZtETeDgO0hqWj7iNxwlaqq2a7ixyo0q8Q9a4TMbPZw4mgY6Ep7BNF"
+    const val CONTENT_TYPE = "application/json"
+    const val TOPIC = "/topics/All"
+
+    const val F_USERS = "users"
+    const val F_APP = "app"
+    const val F_MESSAGES = "messages"
+    const val F_NEW_MESSAGE = "newMessage"
+    const val F_DEVICE_TOKENS = "deviceTokens"
 
 //    fun sortMessage(l: ArrayList<Message>): ArrayList<Message> {
 //        val size = l.size

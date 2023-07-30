@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".fragment.SearchFragment">
-
+    tools:context=".ui.SearchFragment">
 
     <RelativeLayout
         android:id="@+id/linearLayout"
@@ -25,6 +24,7 @@
             android:layout_marginEnd="@dimen/_5sdp"
             android:layout_marginBottom="@dimen/_5sdp"
             android:background="@drawable/bg_back_btn"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_back" />
 
         <EditText
@@ -33,12 +33,12 @@
             android:layout_height="@dimen/_30sdp"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/_5sdp"
-            android:paddingStart="@dimen/_7sdp"
-            android:inputType="textShortMessage"
             android:layout_toEndOf="@id/back"
             android:background="@drawable/bg_et"
             android:fontFamily="@font/inter_medium"
             android:hint="@string/search"
+            android:inputType="textShortMessage"
+            android:paddingStart="@dimen/_7sdp"
             android:textColor="@color/black"
             android:textSize="@dimen/_14sdp"
             tools:ignore="RtlSymmetry" />
