@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -80,13 +81,11 @@ class ProductionFragment : Fragment(), CoroutineScope {
             share.isVisible = true
 
             if (APP_VERSION.toFloat() < appInfo.programmer?.imageUrl?.text!!.toFloat()) {
-//                Glide.with(root.context).load(appInfo.programmer?.imageUrl).centerCrop()
-//                    .into(zpImage)
-                Picasso.get().load(Uri.parse(appInfo.programmer?.imageUrl.toString())).into(zpImage)
+                Glide.with(root.context).load(appInfo.programmer?.imageUrl?.url).centerCrop()
+                    .into(zpImage)
             }
             if (APP_VERSION.toFloat() < appInfo.designer?.imageUrl?.text!!.toFloat()) {
-//                Glide.with(root.context).load(appInfo.designer?.imageUrl).centerCrop().into(dImage)
-                Picasso.get().load(Uri.parse(appInfo.designer?.imageUrl.toString())).into(dImage)
+                Glide.with(root.context).load(appInfo.designer?.imageUrl?.url).centerCrop().into(dImage)
             }
             zpName1.text = appInfo.programmer?.name1
             zpName2.text = appInfo.programmer?.name2
