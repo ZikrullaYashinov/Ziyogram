@@ -1,6 +1,8 @@
 package zikrulla.production.uzbekchat.model.notification
 
+import java.io.Serializable
+
 data class NotificationRequest(
-    val to: String,
-    val data: NotificationData
-)
+    val data: NotificationData,
+    val to: String
+) : Serializable

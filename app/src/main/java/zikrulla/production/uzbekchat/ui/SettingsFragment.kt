@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,20 +15,26 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.addCallback
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import zikrulla.production.uzbekchat.R
 import zikrulla.production.uzbekchat.databinding.FragmentSettingsBinding
 import zikrulla.production.uzbekchat.model.MenuItem
 import zikrulla.production.uzbekchat.model.User
 import zikrulla.production.uzbekchat.util.PopupMenuService
 import zikrulla.production.uzbekchat.util.Util
+import zikrulla.production.uzbekchat.util.Util.TAG
 
 class SettingsFragment : Fragment() {
 
@@ -80,7 +87,22 @@ class SettingsFragment : Fragment() {
                 .load(user.photoUrl)
                 .centerCrop()
                 .into(photo as ImageView)
+            if (!isEditUser) {
+                status.isVisible = true
+                reference.child(Util.F_USERS)
+                    .child(user.uid!!)
+                    .child(Util.F_LAST_ONLINE).addValueEventListener(object :ValueEventListener{
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            val s = snapshot.value.toString()
+                            if (s != "null")
+                                status.text = s
+                        }
 
+                        override fun onCancelled(error: DatabaseError) {
+                            Log.d(TAG, "onCancelled: ${error.message}")
+                        }
+                    })
+            }
         }
 
         if (!isEditUser) hide()
@@ -107,7 +129,7 @@ class SettingsFragment : Fragment() {
     }
 
     private fun finish() {
-        Navigation.findNavController(binding.root).popBackStack()
+        findNavController().popBackStack()
     }
 
     private fun showPopupMenu(view: View) {

@@ -26,7 +26,6 @@ import com.google.firebase.database.ValueEventListener
 import zikrulla.production.uzbekchat.R
 import zikrulla.production.uzbekchat.databinding.FragmentLoginBinding
 import zikrulla.production.uzbekchat.model.User
-import zikrulla.production.uzbekchat.util.FirebaseService
 import zikrulla.production.uzbekchat.util.Util
 import zikrulla.production.uzbekchat.viewmodel.LoginViewModel
 import java.util.Date
@@ -97,7 +96,7 @@ class LoginFragment : Fragment() {
                 account?.id,
                 account?.email,
                 account?.photoUrl.toString(),
-                Date().time
+                Date().time, null
             )
 
             reference.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -118,12 +117,14 @@ class LoginFragment : Fragment() {
                         writeShP(user, true)
                         viewModel.addToken(user, user.deviceTokens as ArrayList<String>?)
                         loginToHome(user)
+                        Log.d(TAG, "onDataChange: login")
                     } else {
                         // register
                         reference.child(user.uid ?: "").setValue(user).addOnSuccessListener {
                             writeShP(user, true)
                             viewModel.addToken(user, null)
                             loginToHome(user)
+                            Log.d(TAG, "onDataChange: register")
                         }
                     }
                 }

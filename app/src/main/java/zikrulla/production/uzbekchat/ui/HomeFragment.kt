@@ -1,5 +1,6 @@
 package zikrulla.production.uzbekchat.ui
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -13,13 +14,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.RemoteInput
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -33,9 +40,13 @@ import zikrulla.production.uzbekchat.model.UserChat
 import zikrulla.production.uzbekchat.util.CustomDialog
 import zikrulla.production.uzbekchat.util.MyService
 import zikrulla.production.uzbekchat.util.Util
+import zikrulla.production.uzbekchat.util.Util.F_LAST_ONLINE
+import zikrulla.production.uzbekchat.util.Util.F_USERS
+import zikrulla.production.uzbekchat.util.Util.STATUS_ONLINE
 import zikrulla.production.uzbekchat.viewmodel.HomeViewModel
 import zikrulla.production.uzbekchat.viewmodel.HomeViewModelFactory
 import zikrulla.production.uzbekchat.viewmodel.Resource
+import java.text.SimpleDateFormat
 import java.util.Date
 import kotlin.coroutines.CoroutineContext
 
@@ -50,6 +61,28 @@ class HomeFragment : Fragment(), CoroutineScope {
     private val adapter by lazy { UserChatListAdapter() }
     private var user: User? = null
     private val TAG = "@@@@"
+
+    private val onlineValueEventListener = object : ValueEventListener {
+        @SuppressLint("SimpleDateFormat")
+        override fun onDataChange(snapshot: DataSnapshot) {
+            if (snapshot.exists()) {
+                setOnlineStatus(snapshot.value.toString())
+                reference.child(F_USERS)
+                    .child(user?.uid!!)
+                    .child(F_LAST_ONLINE)
+                    .onDisconnect()
+                    .setValue(SimpleDateFormat("dd MMMM HH:mm").format(System.currentTimeMillis()))
+            }
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+
+        }
+    }
+
+    private fun setOnlineStatus(status: String) {
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,6 +100,26 @@ class HomeFragment : Fragment(), CoroutineScope {
     override fun onStart() {
         super.onStart()
         readShP()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        reference.child(F_USERS)
+            .child(user?.uid!!)
+            .child(F_LAST_ONLINE)
+            .addValueEventListener(onlineValueEventListener)
+        reference.child(F_USERS)
+            .child(user?.uid!!)
+            .child(F_LAST_ONLINE)
+            .setValue(STATUS_ONLINE)
+    }
+
+    override fun onDestroy() {
+        reference.child(F_USERS)
+            .child(user?.uid!!)
+            .child(F_LAST_ONLINE)
+            .removeEventListener(onlineValueEventListener)
+        super.onDestroy()
     }
 
     private fun loadCreate() {
@@ -105,7 +158,7 @@ class HomeFragment : Fragment(), CoroutineScope {
         val url = sharedPreference.getString(Util.SHP_IMAGE_URL, "")
         val uid = sharedPreference.getString(Util.SHP_UID, "")
         val time = Date().time
-        user = User(name, uid, email, url, time)
+        user = User(name, uid, email, url, time, null)
     }
 
     private fun click() {
@@ -147,71 +200,10 @@ class HomeFragment : Fragment(), CoroutineScope {
         }
     }
 
-    private fun notification(fromUser: User, message: Message) {
-        val EXTRA_TEXT = "ACTION_REPLY"
-        val notificationId = viewModel.getNotificationId()
-
-        val intent = Intent(activity, MyService::class.java)
-        intent.action = EXTRA_TEXT
-        intent.putExtra("notificationId", notificationId)
-        intent.putExtra("user", fromUser)
-        intent.putExtra("message", message)
-
-        val pendingIntent = PendingIntent.getActivity(
-            requireContext(),
-            1,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val remoteInput = RemoteInput.Builder(EXTRA_TEXT)
-            .setLabel("Xabar")
-            .build()
-
-        val action = NotificationCompat.Action.Builder(
-            R.drawable.ic_send_black,
-            "Javob Yozish",
-            pendingIntent
-        ).addRemoteInput(remoteInput).build()
-
-        val notification = NotificationCompat.Builder(requireContext(), "channelId")
-            .setSmallIcon(R.drawable.ic_ziyogram)
-            .setContentTitle(fromUser.displayName)
-            .setContentText(message.text)
-            .setContentIntent(pendingIntent)
-            .addAction(action)
-            .build()
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = fromUser.displayName
-            val descriptionText = message.text
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel =
-                NotificationChannel(getString(R.string.app_name), name, importance).apply {
-                    description = descriptionText
-                }
-            manager.createNotificationChannel(channel)
-        }
-        manager.notify(notificationId, notification)
-    }
-
-    fun notificationFirebase(fromUser: User, message: Message) {
-
-    }
-
-    fun notificationCancel(id: Int) {
-        if (id == -1)
-            manager.cancelAll()
-        else
-            manager.cancel(id)
-    }
-
     private fun readShP() {
         val isLogin = sharedPreference.getBoolean(Util.SHP_IS_SIGIN, false)
         if (!isLogin)
-            Navigation.findNavController(binding.root)
-                .navigate(R.id.action_homeFragment_to_loginFragment)
+            findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
         else {
             loadStart()
         }

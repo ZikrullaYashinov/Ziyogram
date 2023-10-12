@@ -72,6 +72,23 @@
             android:padding="@dimen/_3sdp"
             android:src="@drawable/ic_default_man" />
 
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:layout_toEndOf="@id/photo"
+            android:fontFamily="@font/space_grotesk_medium"
+            android:gravity="center"
+            android:textColor="@color/line2"
+            android:textSize="@dimen/_12sdp"
+            android:visibility="gone"
+            tools:text="online" />
+
         <ImageView
             android:id="@+id/set_photo"
             android:layout_width="@dimen/_30sdp"

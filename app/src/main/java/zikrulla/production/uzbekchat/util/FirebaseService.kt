@@ -13,9 +13,12 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.google.gson.Gson
 import zikrulla.production.uzbekchat.MainActivity
 import zikrulla.production.uzbekchat.R
-import zikrulla.production.uzbekchat.ui.MessageFragment
+import zikrulla.production.uzbekchat.model.Message
+import zikrulla.production.uzbekchat.model.User
+import zikrulla.production.uzbekchat.util.Util.TAG
 
 class FirebaseService : FirebaseMessagingService() {
 
@@ -25,31 +28,45 @@ class FirebaseService : FirebaseMessagingService() {
     private fun getId() = ++notificationId
 
     override fun onNewToken(token: String) {
-        Log.d("@@@@", "onNewToken: $token")
+        Log.d(TAG, "onNewToken: $token")
 
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
+
+        Log.d(TAG, "onMessageReceived: ${message.notification?.title}")
+        Log.d(TAG, "onMessageReceived: ${message.notification?.body}")
+        Log.d(TAG, "onMessageReceived: ${message.data}")
+
+
+        val fromUser = Gson().fromJson(message.data["fromUser"], User::class.java)
+        val toUser = Gson().fromJson(message.data["toUser"], User::class.java)
+        val _message = Gson().fromJson(message.data["message"], Message::class.java)
+
         val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("id", R.id.messageFragment)
+        intent.putExtra("fromUser", fromUser)
+        intent.putExtra("toUser", toUser)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel(notificationManager)
         }
+
         val pendingIntent = PendingIntent.getActivity(
             this,
             0,
             intent,
             PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE
         )
-        Log.d("@@@@", "onMessageReceived: ${message.data["title"]}")
+
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle(message.data["title"])
-            .setContentText(message.data["message"])
+            .setContentTitle(fromUser.displayName)
+            .setContentText(_message.text)
             .setSmallIcon(R.drawable.ic_ziyogram)
             .setContentIntent(pendingIntent)
             .build()

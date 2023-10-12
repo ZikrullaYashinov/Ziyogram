@@ -2,7 +2,9 @@ package zikrulla.production.uzbekchat.util
 
 object Util {
 
-    const val APP_VERSION = "1.1"
+    const val TAG = "@@@@"
+
+    const val APP_VERSION = "1.3"
 
     const val SHP_LOGIN = "sigin"
     const val SHP_IS_SIGIN = "is_sigin"
@@ -26,6 +28,9 @@ object Util {
     const val F_MESSAGES = "messages"
     const val F_NEW_MESSAGE = "newMessage"
     const val F_DEVICE_TOKENS = "deviceTokens"
+    const val F_LAST_ONLINE = "lastOnline"
+
+    const val STATUS_ONLINE = "online"
 
 //    fun sortMessage(l: ArrayList<Message>): ArrayList<Message> {
 //        val size = l.size

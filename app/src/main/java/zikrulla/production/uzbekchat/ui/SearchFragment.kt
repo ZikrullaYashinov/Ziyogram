@@ -2,11 +2,13 @@ package zikrulla.production.uzbekchat.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.google.firebase.database.DataSnapshot
@@ -14,14 +16,22 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import zikrulla.production.uzbekchat.R
 import zikrulla.production.uzbekchat.adapter.UserListAdapter
 import zikrulla.production.uzbekchat.databinding.FragmentSearchBinding
 import zikrulla.production.uzbekchat.model.User
+import zikrulla.production.uzbekchat.model.UserNotLastOnline
 import zikrulla.production.uzbekchat.util.Util
+import zikrulla.production.uzbekchat.util.Util.TAG
+import zikrulla.production.uzbekchat.viewmodel.Resource
+import zikrulla.production.uzbekchat.viewmodel.SearchViewModel
 import zikrulla.production.uzbekchat.viewmodel.UsersViewModel
+import kotlin.coroutines.CoroutineContext
 
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment(), CoroutineScope {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +43,7 @@ class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
     private lateinit var database: FirebaseDatabase
     private lateinit var reference: DatabaseReference
-    private lateinit var viewModel: UsersViewModel
+    private val viewModel: SearchViewModel by viewModels()
     private lateinit var usersList: ArrayList<User>
     private lateinit var user: User
     private val adapter by lazy { UserListAdapter() }
@@ -52,7 +62,6 @@ class SearchFragment : Fragment() {
     }
 
     private fun loadCreate() {
-        viewModel = ViewModelProvider(this)[UsersViewModel::class.java]
         database = FirebaseDatabase.getInstance()
         reference = database.reference
         usersList = ArrayList()
@@ -65,7 +74,7 @@ class SearchFragment : Fragment() {
         }
         binding.recyclerView.adapter = adapter
 
-        readUsers()
+//        readUsers()
     }
 
     private fun click() {
@@ -80,33 +89,25 @@ class SearchFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun change() {
-        viewModel.getUsers().observe(viewLifecycleOwner) {
-            val s = binding.search.text.toString().trim()
-            if (s.isNotEmpty())
-                search(it, s)
-            else
-                adapter.submitList(it)
-        }
-    }
-
-    private fun readUsers() {
-        reference.child("users")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    usersList.clear()
-                    snapshot.children.forEach {
-                        val u = it.getValue(User::class.java)!!
-                        if (u.uid != user.uid)
-                            usersList.add(u)
+        launch {
+            viewModel.getUsers().collect {
+                when (it) {
+                    is Resource.Error -> {
+                        Log.d(TAG, "changeUsers: Error")
                     }
-                    viewModel.fetchUsers(usersList)
-                }
 
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
+                    is Resource.Loading -> {
+                        Log.d(TAG, "changeUsers: Loading")
+                    }
 
-            })
+                    is Resource.Success -> {
+//                        Log.d(TAG, "changeUsers: Success ${it.data}")
+                        usersList = it.data as ArrayList<User>
+                        adapter.submitList(it.data)
+                    }
+                }
+            }
+        }
     }
 
     private fun search(l: ArrayList<User>, query: String?) {
@@ -121,4 +122,7 @@ class SearchFragment : Fragment() {
             adapter.submitList(searchUser)
         }
     }
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main
 }

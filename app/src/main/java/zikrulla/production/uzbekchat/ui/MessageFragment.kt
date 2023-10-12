@@ -15,8 +15,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.bumptech.glide.Glide
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +30,7 @@ import zikrulla.production.uzbekchat.databinding.FragmentMessageBinding
 import zikrulla.production.uzbekchat.model.MenuItem
 import zikrulla.production.uzbekchat.model.Message
 import zikrulla.production.uzbekchat.model.User
-import zikrulla.production.uzbekchat.networking.ApiClient
+import zikrulla.production.uzbekchat.networking.notification.ApiClient
 import zikrulla.production.uzbekchat.util.CustomDialog
 import zikrulla.production.uzbekchat.util.Util
 import zikrulla.production.uzbekchat.viewmodel.MessageViewModelFactory
@@ -44,7 +47,6 @@ class MessageFragment : Fragment(), CoroutineScope {
             user = requireArguments().getSerializable(Util.ARG_USER) as User
             userI = requireArguments().getSerializable(Util.ARG_USER_I) as User
         }
-        FirebaseMessaging.getInstance().subscribeToTopic("All")
     }
 
     private lateinit var binding: FragmentMessageBinding
@@ -78,6 +80,21 @@ class MessageFragment : Fragment(), CoroutineScope {
             recyclerView.adapter = adapter
             name.text = user.displayName
             Glide.with(requireContext()).load(user.photoUrl).centerCrop().into(image)
+            reference.child(Util.F_USERS)
+                .child(user.uid!!)
+                .child(Util.F_LAST_ONLINE).addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val s = snapshot.value.toString()
+                        if (s != "null") {
+                            status.isVisible = true
+                            status.text = s
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.d(Util.TAG, "onCancelled: ${error.message}")
+                    }
+                })
         }
 
     }
@@ -173,7 +190,6 @@ class MessageFragment : Fragment(), CoroutineScope {
                     }
 
                     is Resource.Success -> {
-                        Log.d(TAG, "Success")
                         adapter.submitList(it.data)
                         viewModel.seeMessage(it.data)
                         if (viewModel.isAdapterDeleteEdit == -1)

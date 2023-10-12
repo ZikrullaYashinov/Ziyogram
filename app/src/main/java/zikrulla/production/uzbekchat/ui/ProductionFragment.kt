@@ -92,6 +92,7 @@ class ProductionFragment : Fragment(), CoroutineScope {
             dName1.text = appInfo.designer?.name1
             dName2.text = appInfo.designer?.name2
             info.text = appInfo.info?.body
+            version.text = APP_VERSION
 
             val newV = appInfo.version?.text!!
             if (APP_VERSION.toFloat() < newV.toFloat())

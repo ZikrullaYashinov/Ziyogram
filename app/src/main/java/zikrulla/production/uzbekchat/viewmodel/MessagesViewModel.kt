@@ -1,22 +1,30 @@
 package zikrulla.production.uzbekchat.viewmodel
 
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.R
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import zikrulla.production.uzbekchat.model.Message
 import zikrulla.production.uzbekchat.model.User
 import zikrulla.production.uzbekchat.model.notification.NotificationData
 import zikrulla.production.uzbekchat.model.notification.NotificationRequest
-import zikrulla.production.uzbekchat.networking.ApiService
+import zikrulla.production.uzbekchat.model.notification.NotificationResponse
+import zikrulla.production.uzbekchat.networking.notification.ApiService
 import zikrulla.production.uzbekchat.repository.MessageRepository
 import zikrulla.production.uzbekchat.util.Util
+import zikrulla.production.uzbekchat.util.Util.TAG
 
 class MessagesViewModel(
     private val user: User,
@@ -143,22 +151,39 @@ class MessagesViewModel(
 
     fun sendMessage(message: Message) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) { isNewMessage(isNewMessage = false, i = true) }
-            withContext(Dispatchers.IO) { writeMessage(message, true) }
-            withContext(Dispatchers.IO) { writeMessage(message, false) }
-            withContext(Dispatchers.IO) { isNewMessage(isNewMessage = true, i = false) }
-            withContext(Dispatchers.IO) { sendNotification(message) }
+            async(Dispatchers.IO) { isNewMessage(isNewMessage = false, i = true) }
+            async(Dispatchers.IO) { writeMessage(message, true) }
+            async(Dispatchers.IO) { writeMessage(message, false) }
+            async(Dispatchers.IO) { isNewMessage(isNewMessage = true, i = false) }
+            async(Dispatchers.IO) { sendNotification(message) }
         }
     }
 
     private fun sendNotification(message: Message) {
         user.deviceTokens?.forEach {
+            Log.d(TAG, "sendNotification: $message")
+
             apiService.postNotification(
                 NotificationRequest(
-                    Util.TOPIC,
-                    NotificationData(message.text!!, userI.displayName!!)
+                    NotificationData(message, userI, user),
+                    it
                 )
-            )
+            ).enqueue(object :Callback<NotificationResponse>{
+                override fun onResponse(
+                    call: Call<NotificationResponse>,
+                    response: Response<NotificationResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        Log.d(TAG, "Success: ${response.body()?.success}")
+                    }
+                }
+
+                override fun onFailure(call: Call<NotificationResponse>, t: Throwable) {
+                    t.printStackTrace()
+                    Log.d(TAG, "onFailure: ${t.message}")
+                }
+            })
+//            Log.d(TAG, "sendNotification: $it $postNotification")
         }
     }
 

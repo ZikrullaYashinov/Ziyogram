@@ -1,4 +1,4 @@
-package zikrulla.production.uzbekchat.networking
+package zikrulla.production.uzbekchat.networking.notification
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

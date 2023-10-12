@@ -2,7 +2,7 @@ package zikrulla.production.uzbekchat.model
 
 import java.io.Serializable
 
-open class User : Serializable {
+class UserNotLastOnline : Serializable {
 
     var displayName: String? = null
     var uid: String? = null
@@ -12,14 +12,13 @@ open class User : Serializable {
     var deviceTokens: List<String>? = null
 
     constructor()
-
     constructor(
         displayName: String?,
         uid: String?,
         email: String?,
         photoUrl: String?,
         resentTime: Long?,
-        deviceTokens: List<String>?,
+        deviceTokens: List<String>?
     ) {
         this.displayName = displayName
         this.uid = uid
@@ -28,6 +27,7 @@ open class User : Serializable {
         this.resentTime = resentTime
         this.deviceTokens = deviceTokens
     }
+
 
     override fun toString(): String {
         return "User(displayName=$displayName, uid=$uid, email=$email, photoUrl=$photoUrl, resentTime=$resentTime, deviceTokens=$deviceTokens)"

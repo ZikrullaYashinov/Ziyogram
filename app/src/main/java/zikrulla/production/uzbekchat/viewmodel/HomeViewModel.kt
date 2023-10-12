@@ -30,7 +30,7 @@ class HomeViewModel(private val user: User) : ViewModel() {
         return stateFlow
     }
 
-    fun getUsersUid(): MutableStateFlow<Resource<List<UserChat>>> {
+    private fun getUsersUid(): MutableStateFlow<Resource<List<UserChat>>> {
         return stateUidFlow
     }
 
@@ -86,7 +86,7 @@ class HomeViewModel(private val user: User) : ViewModel() {
                         snapshot.children.forEach {
                             listUserChat.add(
                                 UserChat(
-                                    user = User(null, it.key, null, null, null),
+                                    user = User(null, it.key, null, null, null, null),
                                     isNewMessage = it.child(Util.F_NEW_MESSAGE).value as Boolean
                                 )
                             )
@@ -110,5 +110,6 @@ class HomeViewModel(private val user: User) : ViewModel() {
             .child(userChat.user?.uid!!)
             .removeValue()
     }
+
 
 }
