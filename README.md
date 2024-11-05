@@ -1,8 +1,8 @@
 <p float="left">
-  <img src="./screen1.png" alt="App Screenshot" width="200" height="444"/>
-  <img src="./screen2.png" alt="App Screenshot" width="200" height="444"/>
-  <img src="./screen3.png" alt="App Screenshot" width="200" height="444"/>
-  <img src="./screen4.png" alt="App Screenshot" width="200" height="444"/>
+  <img src="./screen1.jpg" alt="App Screenshot" width="200" height="444"/>
+  <img src="./screen2.jpg" alt="App Screenshot" width="200" height="444"/>
+  <img src="./screen3.jpg" alt="App Screenshot" width="200" height="444"/>
+  <img src="./screen4.jpg" alt="App Screenshot" width="200" height="444"/>
 </p>
 
 # Ziyogram
