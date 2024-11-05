@@ -22,7 +22,7 @@
 To clone this repository, use the following command:
 
 ```bash
-git clone https://github.com/ZikrullaYashinov/Ziyogram
+git clone https://github.com/ZikrullaYashinov/Ziyogram.git
 ```
 
 # Ziyogram
@@ -42,5 +42,5 @@ git clone https://github.com/ZikrullaYashinov/Ziyogram
 Loyihani klonlab olish uchun quyidagi buyruqdan foydalaning:
 
 ```bash
-git clone https://github.com/ZikrullaYashinov/Ziyogram
+git clone https://github.com/ZikrullaYashinov/Ziyogram.git
 ```
